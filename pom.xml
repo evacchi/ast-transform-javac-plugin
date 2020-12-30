@@ -42,9 +42,9 @@
         <configuration>
           <archive>
             <manifest>
-<!--              <mainClass>-->
-<!--                io.github.evacchi.javacc.Main-->
-<!--              </mainClass>-->
+              <!--              <mainClass>-->
+              <!--                io.github.evacchi.javacc.Main-->
+              <!--              </mainClass>-->
             </manifest>
           </archive>
         </configuration>

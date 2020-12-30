@@ -1,5 +1,6 @@
 package io.github.evacchi.javac;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,9 @@ public class JavaCompiler {
         this.diagnostics = new ArrayList<>();
         this.options = new ArrayList<>(List.of(
                 "-d", targetDirectory.toAbsolutePath().toString(),
-                "-cp", targetDirectory.toAbsolutePath().toString()
+                "-cp", String.join(File.pathSeparator,
+                                   targetDirectory.toAbsolutePath().toString(),
+                                   Path.of(".").toAbsolutePath().resolve("target/classes").toString())
         ));
     }
 
