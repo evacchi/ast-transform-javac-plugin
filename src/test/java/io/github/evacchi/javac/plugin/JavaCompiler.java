@@ -58,6 +58,8 @@ public class JavaCompiler {
                             javaSourcePaths.stream()
                                     .map(Path::toString).collect(joining("\n")));
 
+        targetDirectory.toFile().mkdirs();
+
         StandardJavaFileManager standardFileManager = javac.getStandardFileManager(null, null, null);
         RecordingJavaFileManager recordingJavaFileManager = new RecordingJavaFileManager(standardFileManager, sourceDirectory, targetDirectory);
 

@@ -4,7 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.Plugin;
@@ -41,22 +46,33 @@ public class MyPlugin implements Plugin {
 
             @Override
             public void finished(TaskEvent e) {
-//                if (e.getKind() != TaskEvent.Kind.PARSE) {
-//                    return;
-//                }
+                if (e.getKind() != TaskEvent.Kind.PARSE) {
+                    return;
+                }
                 e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree method, Void v) {
-                        List<VariableTree> parametersToInstrument
-                                = method.getParameters().stream()
-//                                .filter(SampleJavacPlugin.this::shouldInstrument)
-                                .collect(Collectors.toList());
+                        TreeMaker treeMaker = TreeMaker.instance(context);
+                        Names names = Names.instance(context);
 
-                        if (!parametersToInstrument.isEmpty()) {
-                            Collections.reverse(parametersToInstrument);
-                            parametersToInstrument.forEach(p -> addCheck(method, p, context));
+                        StatementTree statementTree = method.getBody().getStatements().get(0);
+
+                        if (!(statementTree instanceof ReturnTree)) return null;
+
+                        ReturnTree returnTree = (ReturnTree) statementTree;
+                        ExpressionTree expression = returnTree.getExpression();
+                        MethodInvocationTree mi = (MethodInvocationTree) expression;
+                        MemberSelectTree m = (MemberSelectTree) mi.getMethodSelect();
+                        if (m.getIdentifier().contentEquals("filter")) {
+                            List<? extends ExpressionTree> arguments = mi.getArguments();
+                            JCTree.JCMethodInvocation index = treeMaker.Apply(com.sun.tools.javac.util.List.nil(),
+                                                                              treeMaker.Ident(names.fromString("index")),
+                                                                              (com.sun.tools.javac.util.List<JCTree.JCExpression>) arguments);
+                            ((JCTree.JCMethodInvocation) mi).args = com.sun.tools.javac.util.List.of(index);
                         }
-                        return super.visitMethod(method, v);
+
+
+                        return null;
                     }
                 }, null);
             }

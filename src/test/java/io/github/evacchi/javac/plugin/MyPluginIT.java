@@ -25,12 +25,8 @@ public class MyPluginIT extends BaseIT {
                         fsc.scan(),
                         prj.resolve(sourceDirectory).toAbsolutePath(),
                         prj.resolve(targetDirectory).toAbsolutePath())
-//                        .withOption("--module-path=" + targetDirectory.toAbsolutePath())
                         .withOption("-Xplugin:MyPlugin")
                 ;
-//                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
-//                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED")
-//                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED");
         FileMapper compiled = compiler.compile();
         DiskClassLoader cl = new DiskClassLoader(prj.resolve(targetDirectory));
         Object result = cl.loadAndInvoke("com.example.A", "a");
