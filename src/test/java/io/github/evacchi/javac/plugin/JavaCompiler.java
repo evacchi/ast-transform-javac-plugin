@@ -2,6 +2,7 @@ package io.github.evacchi.javac.plugin;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,8 +10,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -30,11 +34,11 @@ public class JavaCompiler {
         this.sourceDirectory = sourceDirectory;
         this.targetDirectory = targetDirectory;
         this.diagnostics = new ArrayList<>();
-        this.options = new ArrayList<>(List.of(
+        this.options = new ArrayList<>(asList(
                 "-d", targetDirectory.toAbsolutePath().toString(),
                 "-cp", String.join(File.pathSeparator,
                                    targetDirectory.toAbsolutePath().toString(),
-                                   Path.of(".").toAbsolutePath().resolve("target/classes").toString())
+                                   Paths.get(".").toAbsolutePath().resolve("target/classes").toString())
         ));
     }
 
@@ -48,17 +52,18 @@ public class JavaCompiler {
      * @throws CompilationError thrown when javac returns error
      */
     public FileMapper compile() {
-        var javac = ToolProvider.getSystemJavaCompiler();
+        javax.tools.JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 
         LOGGER.info("About to compile the following source files:\n" +
                             javaSourcePaths.stream()
                                     .map(Path::toString).collect(joining("\n")));
 
-        var standardFileManager = javac.getStandardFileManager(null, null, null);
-        var recordingJavaFileManager = new RecordingJavaFileManager(standardFileManager, sourceDirectory, targetDirectory);
+        StandardJavaFileManager standardFileManager = javac.getStandardFileManager(null, null, null);
+        RecordingJavaFileManager recordingJavaFileManager = new RecordingJavaFileManager(standardFileManager, sourceDirectory, targetDirectory);
 
-        var javaFileObjects = standardFileManager.getJavaFileObjects(javaSourcePaths.toArray(new Path[0]));
-        var task =
+        List<File> files = javaSourcePaths.stream().map(Path::toFile).collect(Collectors.toList());
+        Iterable<? extends JavaFileObject> javaFileObjects = standardFileManager.getJavaFileObjectsFromFiles(files);
+        javax.tools.JavaCompiler.CompilationTask task =
                 javac.getTask(
                         null,
                         recordingJavaFileManager,
@@ -66,7 +71,7 @@ public class JavaCompiler {
                         options,
                         null,
                         javaFileObjects);
-        var compilationResult = task.call();
+        Boolean compilationResult = task.call();
         FileMapper processedFiles = recordingJavaFileManager.processedFiles();
         LOGGER.info("The following files were compiled: \n" + processedFiles.toString());
 

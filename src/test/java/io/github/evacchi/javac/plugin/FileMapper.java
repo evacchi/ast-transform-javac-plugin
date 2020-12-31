@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,13 +36,13 @@ public class FileMapper {
     }
 
     public void merge(FileMapper batch) {
-        for (var e : batch.sourceToClasses.entrySet()) {
+        for (Map.Entry<String, Set<String>> e : batch.sourceToClasses.entrySet()) {
             getOrDefault(e.getKey()).addAll(e.getValue());
         }
     }
 
     Collection<Path> get(Path path) {
-        return sourceToClasses.getOrDefault(path.toString(), Collections.emptySet()).stream().map(Path::of).collect(Collectors.toUnmodifiableList());
+        return sourceToClasses.getOrDefault(path.toString(), Collections.emptySet()).stream().map(Paths::get).collect(Collectors.toList());
     }
 
     public void remove(FileMapping f) {
@@ -65,14 +67,14 @@ public class FileMapper {
     public Collection<FileMapping> asCollection() {
         return sourceToClasses.entrySet().stream()
                 .map(e -> new FileMapping(e.getKey(), e.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 
     public Collection<ClassFile> classFiles() {
         return sourceToClasses.values().stream()
                 .flatMap(Collection::stream)
                 .map(ClassFile::new)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 
 
@@ -100,7 +102,7 @@ public class FileMapper {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        for (var e : sourceToClasses.entrySet()) {
+        for (Map.Entry<String, Set<String>> e : sourceToClasses.entrySet()) {
             s.append(e.getKey());
             s.append('\n');
             if (e.getValue() != null) {

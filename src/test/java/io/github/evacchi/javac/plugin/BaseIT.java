@@ -3,6 +3,7 @@ package io.github.evacchi.javac.plugin;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileTime;
 
@@ -19,8 +20,8 @@ public abstract class BaseIT {
 
     public BaseIT(Path workingDirectory) {
         this.workingDirectory = workingDirectory.toAbsolutePath();
-        sourceDirectory = Path.of("src/main/java");
-        targetDirectory = Path.of("target/classes");
+        sourceDirectory = Paths.get("src/main/java");
+        targetDirectory = Paths.get("target/classes");
     }
 
     void touch(Path fullPath) throws IOException {
@@ -33,7 +34,7 @@ public abstract class BaseIT {
     }
 
     Path copySourceToTemp(String prefix) throws IOException {
-        var prj = temp.resolve(prefix);
+        Path prj = temp.resolve(prefix);
         Files.walk(workingDirectory.resolve(sourceDirectory)).forEach(IOConsumer.of(src -> {
             Path relativePath = workingDirectory.relativize(src);
             Path dest = prj.resolve(relativePath);

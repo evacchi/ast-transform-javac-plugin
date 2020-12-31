@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.tools.FileObject;
 import javax.tools.ForwardingFileObject;
@@ -40,15 +41,15 @@ class RecordingJavaFileManager extends ForwardingJavaFileManager<StandardJavaFil
     }
 
     private void record(FileObject inputFile, FileObject outputFile) {
-        Path input = sourcePath.relativize(Path.of(inputFile.toUri().getPath()));
-        Path output = targetPath.relativize(Path.of(outputFile.toUri().getPath()));
+        Path input = sourcePath.relativize(Paths.get(inputFile.toUri().getPath()));
+        Path output = targetPath.relativize(Paths.get(outputFile.toUri().getPath()));
         fileMapper.update(input, output);
     }
 
     @Override
     public FileObject getFileForOutput(Location location, String packageName, String relativeName, final FileObject sibling) throws IOException {
         FileObject fileObject = super.getFileForOutput(location, packageName, relativeName, sibling);
-        return new ForwardingFileObject<>(fileObject) {
+        return new ForwardingFileObject<FileObject>(fileObject) {
             @Override
             public OutputStream openOutputStream() throws IOException {
                 try {
@@ -68,7 +69,7 @@ class RecordingJavaFileManager extends ForwardingJavaFileManager<StandardJavaFil
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String className, javax.tools.JavaFileObject.Kind kind, final FileObject sibling) throws IOException {
         JavaFileObject fileObject = super.getJavaFileForOutput(location, className, kind, sibling);
-        return new ForwardingJavaFileObject<>(fileObject) {
+        return new ForwardingJavaFileObject<JavaFileObject>(fileObject) {
             @Override
             public OutputStream openOutputStream() throws IOException {
                 try {

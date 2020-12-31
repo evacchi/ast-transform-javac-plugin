@@ -1,6 +1,7 @@
 package io.github.evacchi.javac.plugin;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,10 +20,10 @@ public class FileMapping {
     }
 
     FileMapping(String source, Set<String> classFiles) {
-        this(Path.of(source),
+        this(Paths.get(source),
              classFiles.stream()
                      .map(ClassFile::new)
-                     .collect(Collectors.toUnmodifiableList()));
+                     .collect(Collectors.toList()));
     }
 
     public Path source() {

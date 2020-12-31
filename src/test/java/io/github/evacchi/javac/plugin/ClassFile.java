@@ -1,6 +1,7 @@
 package io.github.evacchi.javac.plugin;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -28,7 +29,7 @@ public class ClassFile {
     }
 
     public ClassFile(String path) {
-        this(Path.of(path), toBinaryName(path));
+        this(Paths.get(path), toBinaryName(path));
     }
 
     private static String toBinaryName(String path) {
