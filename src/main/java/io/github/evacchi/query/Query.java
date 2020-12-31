@@ -1,14 +1,19 @@
 package io.github.evacchi.query;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Query<T> {
 
+    public static AtomicInteger IndexCount = new AtomicInteger(0);
+    public static AtomicInteger IndexHits = new AtomicInteger(0);
+
     public static <T> Predicate<T> index(Predicate<T> predicate) {
+        IndexCount.incrementAndGet();
         return t -> {
-            System.out.println("INDEXED");
+            IndexHits.incrementAndGet();
             return predicate.test(t);
         };
     }

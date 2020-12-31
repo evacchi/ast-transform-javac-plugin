@@ -1,13 +1,12 @@
 package io.github.evacchi.javac.plugin;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Collections;
 
+import io.github.evacchi.query.Query;
 import org.junit.jupiter.api.Test;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyPluginIT extends BaseIT {
@@ -25,11 +24,14 @@ public class MyPluginIT extends BaseIT {
                         fsc.scan(),
                         prj.resolve(sourceDirectory).toAbsolutePath(),
                         prj.resolve(targetDirectory).toAbsolutePath())
-                        .withOption("-Xplugin:MyPlugin")
-                ;
+                        .withOption("-Xplugin:MyPlugin");
+
         FileMapper compiled = compiler.compile();
         DiskClassLoader cl = new DiskClassLoader(prj.resolve(targetDirectory));
+        assertEquals(0, Query.IndexCount.get());
         Object result = cl.loadAndInvoke("com.example.A", "a");
-        assertEquals(asList("quux"), result);
+        assertEquals(Collections.singletonList("quux"), result);
+        assertEquals(1, Query.IndexCount.get());
+        assertEquals(4, Query.IndexHits.get());
     }
 }
