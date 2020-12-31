@@ -22,11 +22,11 @@ public class MyPluginIT extends BaseIT {
                         fsc.scan(),
                         prj.resolve(sourceDirectory.toAbsolutePath()),
                         prj.resolve(targetDirectory.toAbsolutePath()))
-                        .withOption("--module-path=" + targetDirectory.toAbsolutePath())
+//                        .withOption("--module-path=" + targetDirectory.toAbsolutePath())
                         .withOption("-Xplugin:MyPlugin")
-                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.api=javac.plugin")
-                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.tree=javac.plugin")
-                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.util=javac.plugin");
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED")
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED");
         var compiled = compiler.compile();
         var cl = new DiskClassLoader(prj.resolve(targetDirectory));
         var result = cl.loadAndInvoke("com.example.A", "a");

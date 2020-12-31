@@ -8,6 +8,7 @@
   <artifactId>javac-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -35,20 +36,20 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <!--              <mainClass>-->
-              <!--                io.github.evacchi.javacc.Main-->
-              <!--              </mainClass>-->
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>3.2.0</version>-->
+<!--        <configuration>-->
+<!--          <archive>-->
+<!--            <manifest>-->
+<!--              &lt;!&ndash;              <mainClass>&ndash;&gt;-->
+<!--              &lt;!&ndash;                io.github.evacchi.javacc.Main&ndash;&gt;-->
+<!--              &lt;!&ndash;              </mainClass>&ndash;&gt;-->
+<!--            </manifest>-->
+<!--          </archive>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -58,9 +59,9 @@
           <source>11</source>
           <target>11</target>
           <compilerArgs>
-            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.api=javac.plugin</arg>
-            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.tree=javac.plugin</arg>
-            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.util=javac.plugin</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -69,6 +70,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.0.0-M5</version>
         <configuration>
+          <forkMode>once</forkMode>
           <!--
             - -add-reads <module>=<target-module>(,<target-module>)*
                               updates <module> to read <target-module>, regardless
@@ -85,9 +87,9 @@
                               <target-module>, regardless of module declaration.
 
           -->
-          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.api=javac.plugin</argLine>
-          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.tree=javac.plugin</argLine>
-          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.util=javac.plugin</argLine>
+          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</argLine>
+          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</argLine>
+          <argLine>--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</argLine>
         </configuration>
         <executions>
           <execution>
