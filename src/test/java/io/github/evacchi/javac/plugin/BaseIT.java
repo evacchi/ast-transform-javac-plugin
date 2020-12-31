@@ -1,4 +1,4 @@
-package io.github.evacchi.javac;
+package io.github.evacchi.javac.plugin;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,10 +8,9 @@ import java.nio.file.attribute.FileTime;
 
 import org.junit.jupiter.api.io.TempDir;
 
-abstract class BaseIT {
+public abstract class BaseIT {
 
-    static @TempDir
-    Path temp;
+    public static @TempDir Path temp;
 
     final Path workingDirectory;
     final Path sourceDirectory;

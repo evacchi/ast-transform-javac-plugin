@@ -1,4 +1,4 @@
-package io.github.evacchi.javac;
+package io.github.evacchi.javac.plugin;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -20,9 +20,13 @@ public class MyPluginIT extends BaseIT {
         var compiler =
                 new JavaCompiler(
                         fsc.scan(),
-                        prj.resolve(sourceDirectory),
-                        prj.resolve(targetDirectory))
-                        .withPlugin("MyPlugin");
+                        prj.resolve(sourceDirectory.toAbsolutePath()),
+                        prj.resolve(targetDirectory.toAbsolutePath()))
+                        .withOption("--module-path=" + targetDirectory.toAbsolutePath())
+                        .withOption("-Xplugin:MyPlugin")
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.api=javac.plugin")
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.tree=javac.plugin")
+                        .withOption("--add-exports=jdk.compiler/com.sun.tools.javac.util=javac.plugin");
         var compiled = compiler.compile();
         var cl = new DiskClassLoader(prj.resolve(targetDirectory));
         var result = cl.loadAndInvoke("com.example.A", "a");

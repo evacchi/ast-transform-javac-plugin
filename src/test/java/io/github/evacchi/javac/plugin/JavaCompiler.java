@@ -1,4 +1,4 @@
-package io.github.evacchi.javac;
+package io.github.evacchi.javac.plugin;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -38,8 +38,8 @@ public class JavaCompiler {
         ));
     }
 
-    public JavaCompiler withPlugin(String plugin) {
-        options.add("-Xplugin:" + plugin);
+    public JavaCompiler withOption(String option) {
+        options.add(option);
         return this;
     }
 

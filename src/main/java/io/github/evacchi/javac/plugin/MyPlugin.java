@@ -41,9 +41,9 @@ public class MyPlugin implements Plugin {
 
             @Override
             public void finished(TaskEvent e) {
-                if (e.getKind() != TaskEvent.Kind.PARSE) {
-                    return;
-                }
+//                if (e.getKind() != TaskEvent.Kind.PARSE) {
+//                    return;
+//                }
                 e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree method, Void v) {

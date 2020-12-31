@@ -1,4 +1,4 @@
-package io.github.evacchi.javac;
+package io.github.evacchi.javac.plugin;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
