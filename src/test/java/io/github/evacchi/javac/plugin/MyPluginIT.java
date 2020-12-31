@@ -23,8 +23,8 @@ public class MyPluginIT extends BaseIT {
         JavaCompiler compiler =
                 new JavaCompiler(
                         fsc.scan(),
-                        prj.resolve(sourceDirectory.toAbsolutePath()),
-                        prj.resolve(targetDirectory.toAbsolutePath()))
+                        prj.resolve(sourceDirectory).toAbsolutePath(),
+                        prj.resolve(targetDirectory).toAbsolutePath())
 //                        .withOption("--module-path=" + targetDirectory.toAbsolutePath())
                         .withOption("-Xplugin:MyPlugin")
                 ;
