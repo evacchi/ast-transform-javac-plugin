@@ -67,6 +67,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.0.0-M5</version>
         <configuration>
+          <!-- these are only required for running the test cases; the plugin works fine from the CLI -->
           <argLine>--add-exports jdk.compiler/com.sun.tools.javac.api=javac.plugin
             --add-exports jdk.compiler/com.sun.tools.javac.util=javac.plugin
             --add-exports jdk.compiler/com.sun.tools.javac.parser=javac.plugin
